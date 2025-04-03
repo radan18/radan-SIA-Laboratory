@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Student Grades</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
@@ -19,10 +19,12 @@
                     <th>Midterm</th>
                     <th>Final</th>
                     <th>Cumulative Grade</th>
-                    <th>Remarks</th>
+                    <th>Grade Equivalent</th>
+                    <th>Remarks</th>  <!-- Added Remarks column -->
                 </tr>
             </thead>
             <tbody>
+                <!-- Data will be dynamically inserted here -->
             </tbody>
         </table>
     </div>
@@ -32,15 +34,15 @@
 
     <script>
         $(document).ready(function() {
-
+            // Fetch students every 10 seconds
             setInterval(fetchStudents, 10000);
 
-
+            // Initial fetch on page load
             fetchStudents();
 
             function fetchStudents() {
                 $.ajax({
-                    url: "/api/students", 
+                    url: "/api/students", // Replace with actual API endpoint
                     type: "GET",
                     dataType: "JSON",
                     success: function(response) {
@@ -50,8 +52,11 @@
                             let final = student.grades ? parseFloat(student.grades.final) || 'N/A' : 'N/A';
                             let cumulative = (midterm !== 'N/A' && final !== 'N/A') ? ((midterm + final) / 2).toFixed(2) : 'N/A';
                             
-          
-                            let remarks = (cumulative !== 'N/A' && cumulative >= 4.0) ? 'Failed' : 'Passed';
+                            // Convert Cumulative Grade to Grade Equivalent (adjust scale as needed)
+                            let gradeEquivalent = cumulative !== 'N/A' ? parseFloat(cumulative) : 'N/A';
+
+                            // Determine Remarks: "Passed" if Grade Equivalent is ≤ 3.0, otherwise "Failed"
+                            let remarks = (gradeEquivalent !== 'N/A' && gradeEquivalent <= 3.0) ? 'Passed' : 'Failed';
 
                             rows += `
                             <tr>
@@ -61,6 +66,7 @@
                                 <td>${midterm}</td>
                                 <td>${final}</td>
                                 <td>${cumulative}</td>
+                                <td>${gradeEquivalent}</td>
                                 <td>${remarks}</td>
                             </tr>
                             `;
