@@ -20,11 +20,11 @@
                     <th>Final</th>
                     <th>Cumulative Grade</th>
                     <th>Grade Equivalent</th>
-                    <th>Remarks</th>  <!-- Added Remarks column -->
+                    <th>Remarks</th> 
                 </tr>
             </thead>
             <tbody>
-                <!-- Data will be dynamically inserted here -->
+                
             </tbody>
         </table>
     </div>
@@ -34,15 +34,15 @@
 
     <script>
         $(document).ready(function() {
-            // Fetch students every 10 seconds
+            
             setInterval(fetchStudents, 10000);
 
-            // Initial fetch on page load
+           
             fetchStudents();
 
             function fetchStudents() {
                 $.ajax({
-                    url: "/api/students", // Replace with actual API endpoint
+                    url: "/api/students", 
                     type: "GET",
                     dataType: "JSON",
                     success: function(response) {
@@ -52,10 +52,10 @@
                             let final = student.grades ? parseFloat(student.grades.final) || 'N/A' : 'N/A';
                             let cumulative = (midterm !== 'N/A' && final !== 'N/A') ? ((midterm + final) / 2).toFixed(2) : 'N/A';
                             
-                            // Convert Cumulative Grade to Grade Equivalent (adjust scale as needed)
+                    
                             let gradeEquivalent = cumulative !== 'N/A' ? parseFloat(cumulative) : 'N/A';
 
-                            // Determine Remarks: "Passed" if Grade Equivalent is ≤ 3.0, otherwise "Failed"
+                         
                             let remarks = (gradeEquivalent !== 'N/A' && gradeEquivalent <= 3.0) ? 'Passed' : 'Failed';
 
                             rows += `
